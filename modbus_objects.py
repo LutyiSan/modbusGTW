@@ -1,5 +1,6 @@
 from schema import *
 
+
 class Point:
     def __init__(self, name):
         self.name = name
@@ -143,6 +144,19 @@ class Device:
         if self.__timeout is None:
             self.__timeout = Timeout.default
 
+    def add_points(self, points):
+        for point in points:
+            p = Point(point['name'])
+            p.reg_type = point['reg_type']
+            p.reg_address = point['reg_address']
+            p.quantity = point['quantity']
+            p.bit_number = point['bit_number']
+            p.data_type = point['value_type']
+            p.word_order = point['word_order']
+            p.byte_order = point['byte_order']
+            p.scale = point['scale']
+            self.points.append(p)
+
     def __repr__(self):
         return f"name: {self.name}\n  ip_address: {self.ip_address}\n  port: {self.port}\n" \
                f"  poll_period: {self.poll_period}\n  timeout: {self.timeout}"
@@ -174,6 +188,4 @@ def validate_in_enum(enum, test_data):
         return test_data
 
 
-p = Point('name-p1')
-print(p)
 
