@@ -1,9 +1,17 @@
+from loguru import logger
 from config import create_config
 from modbus_objects import Device
 
+"""
+1. Создаем конфигурации девайсов из csv файлов (create_devices)
+"""
 
-devices = create_config()
-if devices:
+
+def create_devices():
+    devices = create_config()
+    if not devices:
+        logger.error("Devices is not created! Check csv-files")
+        return
     polling_devices = []
     for device in devices:
         polling_device = Device(device['device']['name'])
@@ -13,5 +21,8 @@ if devices:
         polling_device.poll_period = device['device']['poll_period']
         polling_device.add_points(device['points'])
         polling_devices.append(polling_device)
-        print(polling_device)
-        print(polling_device.points[0])
+        logger.debug(f"device {polling_device.name} created")
+    logger.debug(f"All devices created")
+    return polling_devices
+
+create_devices()
