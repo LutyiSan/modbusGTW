@@ -1,8 +1,8 @@
 from os import path
 
 from env import DEVICE_LIST
-from schema import CSVParams
-from verifier import check_config
+from schema import CSV
+
 
 PREFIX = "devices"
 
@@ -18,7 +18,7 @@ def check_file(filepath: str, filenames: list):
 
 def check_headers(cols):
     params = []
-    for k in CSVParams:
+    for k in CSV:
         params.append(k.value)
     for col in cols:
         if col not in params:
@@ -101,9 +101,8 @@ def create_config():
                 return
     normal_data = normalize_config_values(config_list)
     if normal_data:
-        chk_data = check_config(normal_data)
-        if chk_data:
-            return chk_data
+        return normal_data
+
 
 
 

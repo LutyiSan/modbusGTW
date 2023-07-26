@@ -2,6 +2,24 @@ from enum import Enum, unique
 
 
 @unique
+class CSV(Enum):
+    ip = 'ip'
+    port = 'port'
+    timeout = 'timeout'
+    poll_period = 'poll_period'
+    reg_type = 'reg_type'
+    reg_address = 'reg_address'
+    quantity = 'quantity'
+    bit_number = 'bit_number'
+    value_type = 'value_type'
+    word_order = 'word_order'
+    byte_order = 'byte_order'
+    scale = 'scale'
+    name = 'name'
+    topic = 'topic'
+
+
+@unique
 class RegTypes(Enum):
     coils = 1
     discrete_inputs = 2
