@@ -1,0 +1,4 @@
+ip;port;timeout;poll_period;reg_type;reg_address;quantity;bit_number;value_type;word_order;byte_order;scale;name;topic
+10.188.20.23;503;1;5;3;19003;2;1;uint2;big;big;1;u-l3-n;umg-mb4iot
+10.188.20.23;503;3;5;1;19001;2;3;uint32;big;big;1;u-l1-n;umg-mb4iot
+10.188.20.23;503;3;5;2;19002;2;2;uint32;big;big;1;u-l2-n;umg-mb4iot
