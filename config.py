@@ -1,5 +1,4 @@
 from os import path
-
 from env import DEVICE_LIST
 from schema import CSV
 
@@ -95,16 +94,10 @@ def create_config():
     if check_file(PREFIX, DEVICE_LIST):
         for d in DEVICE_LIST:
             config = csv_to_dict(d, ";")
-          #  print(config)
             if config:
                 config_list.append(config)
             else:
                 return
     normal_data = normalize_config_values(config_list)
-    #print(normal_data)
     if normal_data:
         return normal_data
-
-
-
-

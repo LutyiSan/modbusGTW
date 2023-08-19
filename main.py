@@ -1,8 +1,19 @@
+from time import sleep
 from loguru import logger
 from config import create_config
 from modbus_objects import Device
 from modbus_pymodbus import TCPClient
 from convertor import Convertor
+from mqtt import MyMQTT
+from env import *
+
+
+def prepare_data_for_mqtt(device):
+    print(device)
+    points = {}
+    for p in device.points:
+        points[p.name] = p.present_value
+    return points
 
 
 class GTW:
@@ -10,6 +21,7 @@ class GTW:
         self.devices = None
         self.source = source
         self.recipient = recip
+        self.mqtt_client = MyMQTT()
 
     def create_devices(self):
         match self.source:
@@ -34,20 +46,33 @@ class GTW:
             logger.debug(f"Device {polling_device.name} created")
             logger.debug(f"All devices created")
 
-    def read_points(self):
+    def __read_points(self):
         client = TCPClient()
         for d in self.poll_devices:
             if not client.connection(d.ip_address, d.port):
                 return
             for point in d.points:
                 result = client.read_single(point, unit=d.unit)
+
                 if result:
                     point.present_value = Convertor.converting(result, point)
                 else:
                     point.present_value = 'fault'
                     d.is_fault = True
+            client.disconnect()
+
+    def run_time(self):
+        self.mqtt_client.create(USER_NAME, USE_PASSWD)
+        self.__read_points()
+
+        if self.mqtt_client.connect(BROKER, BROKER_PORT):
+            for d in self.poll_devices:
+                self.mqtt_client.send(TOPIC, prepare_data_for_mqtt(d))
+            self.mqtt_client.disconnect()
 
 
 gtw = GTW()
 gtw.create_devices()
-gtw.read_points()
+while True:
+    gtw.run_time()
+    sleep(3)
