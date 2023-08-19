@@ -5,6 +5,7 @@ from enum import Enum, unique
 class CSV(Enum):
     ip = 'ip'
     port = 'port'
+    unit = 'unit'
     timeout = 'timeout'
     poll_period = 'poll_period'
     reg_type = 'reg_type'
@@ -30,15 +31,9 @@ class RegTypes(Enum):
 @unique
 class DataTypes(Enum):
     boolean = "bool"
-    uint16 = 'uint16'
-    uint32 = 'uint32'
-    uint64 = 'uint64'
-    int16 = 'int16'
-    int32 = 'int32'
-    int64 = 'int64'
-    float16 = 'float16'
-    float32 = 'float32'
-    float64 = 'float64'
+    uint = 'uint'
+    int = 'int'
+    float = 'float'
     bit = 'bit'
 
 
@@ -80,3 +75,9 @@ class Timeout:
     min = 1
     max = 30
     default = 3
+
+
+class Unit:
+    min = 1
+    max = 127
+    default = 1

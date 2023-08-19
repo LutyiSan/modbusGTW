@@ -48,7 +48,7 @@ def csv_to_dict(csv_file: str, csv_delimiter: str):
 
 
 def make_device(data):
-    device = {'ip': data['ip'][0], 'port': data['port'][0], 'timeout': data['timeout'][0],
+    device = {'ip': data['ip'][0], 'port': data['port'][0], 'timeout': data['timeout'][0], "unit": data['unit'][0],
               'poll_period': data['poll_period'][0], 'name': data['topic'][0]}
     return device
 
@@ -95,11 +95,13 @@ def create_config():
     if check_file(PREFIX, DEVICE_LIST):
         for d in DEVICE_LIST:
             config = csv_to_dict(d, ";")
+          #  print(config)
             if config:
                 config_list.append(config)
             else:
                 return
     normal_data = normalize_config_values(config_list)
+    #print(normal_data)
     if normal_data:
         return normal_data
 

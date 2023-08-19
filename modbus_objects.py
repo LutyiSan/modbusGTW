@@ -103,8 +103,21 @@ class Device:
         self.port = None
         self.poll_period = None
         self.timeout = None
+        self.unit = None
         self.name = name
+        self.is_fault = None
+        self.status = None
         self.points = []
+
+    @property
+    def unit(self):
+        return self.__unit
+
+    @unit.setter
+    def unit(self, value):
+        self.__unit = validate_digit(value, Unit.min, Unit.max)
+        if self.__unit is None:
+            self.__unit = Unit.default
 
     @property
     def ip_address(self):
@@ -158,8 +171,7 @@ class Device:
             self.points.append(p)
 
     def __repr__(self):
-        return f"name: {self.name}\n  ip_address: {self.ip_address}\n  port: {self.port}\n" \
-               f"  poll_period: {self.poll_period}\n  timeout: {self.timeout}"
+        return f"name: {self.name}\n  tp-address: {self.ip_address}\n  port: {self.port}\n"
 
 
 def validate_ip(test_data):
@@ -186,6 +198,3 @@ def validate_digit(test_data, start, stop):
 def validate_in_enum(enum, test_data):
     if test_data in enum:
         return test_data
-
-
-
