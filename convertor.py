@@ -23,6 +23,8 @@ class Convertor:
             return Convertor.to_float16(values, point)
         elif point.data_type == 'bool':
             return Convertor.to_bool(values)
+        elif point.data_type == 'bit':
+            return Convertor.to_bit(values, point)
 
     @staticmethod
     def two_registers(values, point):
@@ -53,14 +55,14 @@ class Convertor:
                 return False
 
     @staticmethod
-    def to_bit(value: int, bit: int or None) -> bool or None:
+    def to_bit(value: int, point) -> bool or None:
         if not isinstance(value, int):
             return None
         else:
             bv = Convertor.to_16bit_array(value)
             if bv is None:
                 return None
-            if int(bv[bit]) == 1:
+            if int(bv[point.bit]) == 1:
                 return True
             else:
                 return False

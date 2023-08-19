@@ -9,7 +9,6 @@ from env import *
 
 
 def prepare_data_for_mqtt(device):
-    print(device)
     points = {}
     for p in device.points:
         points[p.name] = p.present_value
@@ -51,28 +50,28 @@ class GTW:
         for d in self.poll_devices:
             if not client.connection(d.ip_address, d.port):
                 return
-            for point in d.points:
-                result = client.read_single(point, unit=d.unit)
-
-                if result:
-                    point.present_value = Convertor.converting(result, point)
-                else:
-                    point.present_value = 'fault'
-                    d.is_fault = True
+            if not MULTI_READ:
+                for point in d.points:
+                    result = client.read_single(point, unit=d.unit)
+                    if result:
+                        point.present_value = Convertor.converting(result, point)
+                    else:
+                        point.present_value = 'fault'
+                        d.is_fault = True
             client.disconnect()
 
     def run_time(self):
         self.mqtt_client.create(USER_NAME, USE_PASSWD)
         self.__read_points()
+        if RECIPIENT == 'mqtt':
+            if self.mqtt_client.connect(BROKER, BROKER_PORT):
+                for d in self.poll_devices:
+                    self.mqtt_client.send(TOPIC, prepare_data_for_mqtt(d))
+                self.mqtt_client.disconnect()
 
-        if self.mqtt_client.connect(BROKER, BROKER_PORT):
-            for d in self.poll_devices:
-                self.mqtt_client.send(TOPIC, prepare_data_for_mqtt(d))
-            self.mqtt_client.disconnect()
 
 
 gtw = GTW()
 gtw.create_devices()
-while True:
-    gtw.run_time()
-    sleep(3)
+
+gtw.run_time()

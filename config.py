@@ -1,7 +1,8 @@
 from os import path
+from operator import itemgetter
+from loguru import logger
 from env import DEVICE_LIST
 from schema import CSV
-
 
 PREFIX = "devices"
 
@@ -9,8 +10,8 @@ PREFIX = "devices"
 def check_file(filepath: str, filenames: list):
     if not path.exists(filepath):
         return
-    for f in filenames:
-        if not path.isfile("/".join([filepath, f])):
+    for file in filenames:
+        if not path.isfile("/".join([filepath, file])):
             return
     return True
 
@@ -32,18 +33,21 @@ def csv_to_dict(csv_file: str, csv_delimiter: str):
     if not cols:
         return
     result_dict = dict.fromkeys(cols)
-    for col in cols:
-        result_dict[col] = []
-    idx = 0
-    rows = len(csv_txt) - 1
-    while idx < rows:
-        idx += 1
-        row = csv_txt[idx].split(csv_delimiter)
-        c = -1
+    try:
         for col in cols:
-            c += 1
-            result_dict[col].append(row[c])
-    return result_dict
+            result_dict[col] = []
+        idx = 0
+        rows = len(csv_txt) - 1
+        while idx < rows:
+            idx += 1
+            row = csv_txt[idx].split(csv_delimiter)
+            c = -1
+            for col in cols:
+                c += 1
+                result_dict[col].append(row[c])
+        return result_dict
+    except Exception as e:
+        logger.error(e)
 
 
 def make_device(data):
@@ -68,6 +72,7 @@ def make_points(conf):
         points.append(point)
         pi += 1
     return points
+
 
 
 def normalize_config_values(config: list):

@@ -170,6 +170,9 @@ class Device:
             p.scale = point['scale']
             self.points.append(p)
 
+    def grouping_points(self):
+        pass
+
     def __repr__(self):
         return f"name: {self.name}\n  tp-address: {self.ip_address}\n  port: {self.port}\n"
 

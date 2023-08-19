@@ -3,8 +3,8 @@ SOURCE = 'file'
 # Получатель данных
 RECIPIENT = 'mqtt'
 # Список конфигурационных файлов
-DEVICE_LIST = ['exam.csv']
-
+DEVICE_LIST = ['exam.csv','exam.csv']
+MULTI_READ = False
 # MQTT параметры
 USER_NAME = 'user'
 USE_PASSWD = 'user'
